@@ -28,7 +28,6 @@ public class ApiService {
                 .basePath(Constants.endpointUser)
                 .post().then().extract();
 
-        //printing response
         response.getBody().prettyPrint();
 
         LocalData.getInstance().setUserResponse(new Gson().fromJson(response.asPrettyString(), User.class));
@@ -42,10 +41,8 @@ public class ApiService {
                 .header("Content-Type", "application/json")
                 .get(Constants.baseUrl + Constants.endpointUser)
                 .then().extract();
-        //saving response as a JSON
         String jsonResponse = response.getBody().asString();
 
-        // Convert JSONs' list to Java objects
         Type listType = new TypeToken<List<User>>() {
         }.getType();
         List<User> users = new Gson().fromJson(jsonResponse, listType);
@@ -69,7 +66,6 @@ public class ApiService {
                 .basePath(Constants.endpointUser)
                 .put().then().extract();
 
-//        LocalData.localData.setUserResponse(new Gson().fromJson(response.asPrettyString(), User.class));
         response.getBody().prettyPrint();
         return response;
     }
@@ -84,7 +80,27 @@ public class ApiService {
                 .basePath(Constants.endpointUser)
                 .delete(userId).then().extract();
 
-//        LocalData.localData.setUserResponse(new Gson().fromJson(response.asPrettyString(), User.class));
+        response.getBody().prettyPrint();
+        return response;
+    }
+
+
+    public static Response getUsersByID(Long id) {
+        Response response = (Response) RestAssured.given()
+                .log()
+                .all()
+                .header("Content-Type", "application/json")
+                .get(Constants.baseUrl + Constants.endpointUser)
+                .then().extract();
+        String jsonResponse = response.getBody().asString();
+
+        Type listType = new TypeToken<List<User>>() {
+        }.getType();
+        List<User> users = new Gson().fromJson(jsonResponse, listType);
+        for (User user : users) {
+            System.out.println(user);
+        }
+        LocalData.getInstance().setUserResponses(users);
         response.getBody().prettyPrint();
         return response;
     }
