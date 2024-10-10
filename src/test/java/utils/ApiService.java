@@ -16,8 +16,8 @@ import java.util.List;
 
 public class ApiService {
 
-    public static Response postUser() throws IOException {
-        String body = Files.readString(Paths.get("src/test/resources/postUser.json"));
+    public static Response postUser(String path) throws IOException {
+        String body = Files.readString(Paths.get(path));
         Response response = (Response) RestAssured.given()
                 .log()
                 .all()
@@ -54,8 +54,8 @@ public class ApiService {
         return response;
     }
 
-    public static Response putUser() throws IOException {
-        String body = Files.readString(Paths.get("src/test/resources/putUser.json"));
+    public static Response putUser(String path) throws IOException {
+        String body = Files.readString(Paths.get(path));
 
         Response response = (Response) RestAssured.given()
                 .log()
@@ -85,12 +85,32 @@ public class ApiService {
     }
 
 
-    public static Response getUsersByID(Long id) {
+    public static Response getUsersByID(long id) {
         Response response = (Response) RestAssured.given()
                 .log()
                 .all()
                 .header("Content-Type", "application/json")
-                .get(Constants.baseUrl + Constants.endpointUser)
+                .get(Constants.baseUrl + Constants.endpointUser + id)
+                .then().extract();
+        String jsonResponse = response.getBody().asString();
+
+        Type listType = new TypeToken<List<User>>() {
+        }.getType();
+        List<User> users = new Gson().fromJson(jsonResponse, listType);
+        for (User user : users) {
+            System.out.println(user);
+        }
+        LocalData.getInstance().setUserResponses(users);
+        response.getBody().prettyPrint();
+        return response;
+    }
+
+    public static Response getUsersByString(String string) {
+        Response response = (Response) RestAssured.given()
+                .log()
+                .all()
+                .header("Content-Type", "application/json")
+                .get(Constants.baseUrl + Constants.endpointUser + string)
                 .then().extract();
         String jsonResponse = response.getBody().asString();
 
