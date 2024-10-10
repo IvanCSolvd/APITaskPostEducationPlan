@@ -4,13 +4,13 @@ import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.com.solvd.models.User;
+import org.com.solvd.utils.Auth;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.com.solvd.utils.Auth;
 
 public class GraphQLTests {
-    private static RequestSpecification request;
     public static String baseURI = "https://gorest.co.in/public/v2";
+    private static RequestSpecification request;
 
     @BeforeClass
     public void setUp() {
@@ -52,7 +52,7 @@ public class GraphQLTests {
 
     @Test
     public void createUser() {
-        User userObj = new User(111112,"Jane Feld", "jane@test.com", "female", "active");
+        User userObj = new User(111112, "Jane Feld", "jane@test.com", "female", "active");
         String jsonObj = new Gson().toJson(userObj);
         System.out.println(jsonObj);
         String bodyQuery = "{\n" +
