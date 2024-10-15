@@ -67,4 +67,33 @@ public class GraphQLTests {
 
         response.then().log().all(true).assertThat().statusCode(200);
     }
+
+    @Test
+    public void UpdateUser() {
+        String bodyQuery = "{\n" +
+                "  \"query\": \"query User { user(id: \\\"7410750\\\", status: \\\"innactive\\\") { email gender id name status }}\"\n" +
+                "}";
+        Response response = RestAssured.given().log().all()
+                .spec(request)
+                .body(bodyQuery)
+                .when()
+                .post("/graphql");
+
+        response.then().log().all(true).assertThat().statusCode(200);
+    }
+
+    @Test
+    public void DeleteUser() {
+        String bodyQuery = "{\n" +
+                "  \"query\": \"mutation DeleteUser { deleteuser( input: {id: \\\"7410750\\\"}) { user { email gender id name status } }}\"\n" +
+                "}";
+
+        Response response = RestAssured.given().log().all()
+                .spec(request)
+                .body(bodyQuery)
+                .when()
+                .post("/graphql");
+
+        response.then().log().all(true).assertThat().statusCode(200);
+    }
 }
